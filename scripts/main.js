@@ -3,7 +3,14 @@
 
 	item		item entry in database
 	product		items which contain similar titles in their labels are deemed the same product, even if concentration differs.
+
+
+	ASSUMPTIONS
+
+	mapping text stored within db also includes '/n'
 */
+
+const MAX_SUBSTRING_LENGTH = 15;
 
 
 
@@ -35,6 +42,10 @@ function getItemId(m) {
 
 }
 
+//given a mapping m, returns text contained within m.
+function getTextFromMapping(m) {
+}
+
 //given the text obtained from an image, attempts to map it to a specific item. returns id of said item.
 function mapTextToItemId(txt) {
 
@@ -50,8 +61,40 @@ function mapTextToItemId(txt) {
 	*/
 	function checkRelevance(m, txt, tol) {
 
-		
+		if (tol > 3) console.log("tolerance v high may not be accurate");
 
+		let m_text = getTextFromMapping(m);
+		let m_text_c = m_text;					//the c stands for corrupted
+
+		if (m_text.length > MAX_SUBSTRING_LENGTH) {
+			//todo
+		}
+		else {
+			let regex;
+
+			for (let i = 0; i < Math.pow(m_text.length, tol); i++) {
+
+				m_text_c = m_text;
+
+
+				//todo introduce "corruption" using replaceAt
+
+
+
+				regex = new RegExp(m_text_c);
+
+				if (txt.match(regex)) {
+					return true;
+				}
+				else {
+					continue;
+				}
+			}
+
+			return false;
+		}
+
+		return false;
 	}
 
 	/*
@@ -107,6 +150,14 @@ function mapTextToItemId(txt) {
 	rv = getItemId(mappings[0]);
 	return rv;
 }
+
+function replaceAt(index, str, replacement) {
+	return str.substring(0, index) + replacement + str.substring(index + 1, str.length);
+}
+
+
+
+
 
 
 submit_button.addEventListener("click", processUpload);
