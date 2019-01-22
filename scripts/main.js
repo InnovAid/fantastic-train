@@ -29,21 +29,22 @@ function processUpload() {
 
 //given an image file, obtains the text contained within the image
 function getImageText(img) {
-
+	//todo lias with cloud api
 }
 
 //obtains all existing text mappings from the db
 function getAllMappings() {
-
+	//todo lias with db
 }
 
 //given a mapping m, returns item id of m.
 function getItemId(m) {
-
+	//todo lias with db
 }
 
 //given a mapping m, returns text contained within m.
 function getTextFromMapping(m) {
+	//todo lias with db
 }
 
 //given the text obtained from an image, attempts to map it to a specific item. returns id of said item.
@@ -59,6 +60,7 @@ function mapTextToItemId(txt) {
 		returns true if m is deemed relevant to txt, i.e. m and txt represent the same product, false otherwise.
 		this is determined keeping tol in mind.
 	*/
+	
 	function checkRelevance(m, txt, tol) {
 
 		if (tol > 3) console.log("tolerance v high may not be accurate");
@@ -127,9 +129,13 @@ function mapTextToItemId(txt) {
 		}
 	}
 
-
+	
 
 	let mappings = getAllMappings();
+	let least_distance = Number.MAX_SAFE_INTEGER;
+	let best_mapping;
+
+	/*
 	let relevant_mappings;
 	let tolerance = 0;
 
@@ -149,15 +155,24 @@ function mapTextToItemId(txt) {
 
 	rv = getItemId(mappings[0]);
 	return rv;
+	*/
+
+	mappings.forEach(m => {
+
+		let m_text = getTextFromMapping(m);
+		let dist = getEditDistance(txt, m_text);
+
+		if (dist < least_distance) {
+			least_distance = dist;
+			best_mapping = m;
+		}
+	});
+
+	return getItemId(best_mapping);
 }
 
 function replaceAt(index, str, replacement) {
 	return str.substring(0, index) + replacement + str.substring(index + 1, str.length);
 }
-
-
-
-
-
 
 submit_button.addEventListener("click", processUpload);
